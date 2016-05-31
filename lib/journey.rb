@@ -1,12 +1,13 @@
 class Journey
 
-  def initialize(entry_station)
+  def initialize(entry_station = nil)
     @status = {}
-    @status[:entry_station] = entry_station
+
+    @status[:entry_station] = entry_station unless entry_station == nil
   end
 
-  def finish(exit_station)
-    status[:exit_station] = exit_station
+  def finish(exit_station = nil)
+    status[:exit_station] = exit_station unless exit_station == nil
     fare
     status
   end
