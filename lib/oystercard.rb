@@ -13,7 +13,7 @@ class Oystercard
 		@journey_log = journey_log
 	end
 
-	def topup(value)
+	def top_up(value)
     fail "Balance exceeded limit of #{MAX_BALANCE}" if (balance + value) > MAX_BALANCE
 		@balance += value
 	end
@@ -38,5 +38,5 @@ class Oystercard
 	  def no_touch_out_penalty
 	  	deduct @journey_log.journey.calculate_fare if @journey_log.journey
 	  end
-	  
+
 end

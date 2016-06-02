@@ -20,17 +20,17 @@ describe Oystercard do
 	describe '#topup' do
 
 		it 'should respond to #topup with 1 argument' do
-			expect(oystercard).to respond_to(:topup).with(1).argument
+			expect(oystercard).to respond_to(:top_up).with(1).argument
 		end
 
 		it 'topup(value) should increase #balance by value' do
-			oystercard.topup(20)
+			oystercard.top_up(20)
 			expect(oystercard.balance).to eq(20)
 		end
 
 		it 'topup should raise error if balance would be over limit' do
 			max_balance = Oystercard::MAX_BALANCE
-			expect{oystercard.topup(100)}.to raise_error "Balance exceeded limit of #{max_balance}"
+			expect{oystercard.top_up(100)}.to raise_error "Balance exceeded limit of #{max_balance}"
 		end
 
 	end
@@ -65,7 +65,7 @@ describe Oystercard do
 		# end
 
 		# it 'charges PENALTY_FARE for incomplete journey (no entry)' do
-		# 	oystercard.topup(10)
+		# 	oystercard.top_up(10)
 		# 	expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by (-Journey::PENALTY_FARE)
 		# end
 
