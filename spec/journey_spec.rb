@@ -21,7 +21,7 @@ describe Journey do
     end
 
     it 'fare should return minimum fare' do
-      expect(journey.fare).to eq (Journey::PENALTY_FARE)
+      expect(journey.calculate_fare).to eq (Journey::PENALTY_FARE)
     end
 
     it 'returns itself when finish' do

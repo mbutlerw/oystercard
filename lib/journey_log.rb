@@ -1,42 +1,38 @@
-require 'forwardable'
+require_relative 'journey'
+
 class JourneyLog
-  extend Forwardable
 
-  def_delegator :current_journey, :exit, :exit_journey
-
-  NO_CHARGE = 0
-
-  def initialize(journey_class: Journey)
-    @journey_class = journey_class
+  attr_reader :journeys, :journey
+  
+  def initialize
     @journeys = []
+    @journey = nil
   end
 
-  def start_journey(station)
-    fail 'Already in a Journey.' if current_journey.entry_station
-    add(journey_class.new(entry_station: station))
+  def create_journey(journey = Journey.new)
+      @journey = journey
   end
 
-  def journeys
-    @journeys.dup
+  def start(station)
+    open_journey_check
+    create_journey
+    @journey.start(station)
   end
 
-  def outstanding_charges
-    incomplete_journey ? incomplete_journey.exit.fare : NO_CHARGE
+  def finish(station)
+    create_journey if @journey == nil
+    @journeys << @journey.finish(station)
+    @journey = nil
   end
 
-  private
-  attr_reader :journey_class
-
-  def incomplete_journey
-    journeys.reject(&:complete?).first
+  def open_journey_check
+      if @journey
+         @journeys << @journey.finish
+      end
   end
 
-  def current_journey
-    incomplete_journey || journey_class.new
-  end
-
-  def add(journey)
-    @journeys << journey
+  def last_fare 
+    @journeys.last.fare
   end
 
 end
