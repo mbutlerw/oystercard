@@ -29,11 +29,12 @@ class Oystercard
 			deduct(@journey.fare)
 			@journeys << journey.finish
 		end
-    @journey = Journey.new(station)
+    create_journey
+		@journey.start(station)
   end
 
   def touch_out(station)
-		@journey = Journey.new if @journey == nil
+		create_journey if @journey == nil
     @journeys << @journey.finish(station)
 		deduct(@journey.fare)
 		@journey = nil
@@ -44,5 +45,9 @@ class Oystercard
 	  def deduct(value)
 	    @balance -= value
 	  end
+
+		def create_journey(journey = Journey.new)
+			@journey = journey
+		end
 
 end

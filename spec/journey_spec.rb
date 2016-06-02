@@ -8,7 +8,9 @@ describe Journey do
 
   context "given an entry station" do
 
-    subject(:journey) {described_class.new(station)}
+    subject(:journey) {described_class.new}
+
+    before {journey.start(station)}
 
     it "has an entry station" do
       expect(journey.entry_station).to eq station
@@ -48,7 +50,9 @@ describe Journey do
 
   context "given both an entry and exit station" do
 
-    subject(:journey) {described_class.new(station)}
+    subject(:journey) {described_class.new}
+
+    before {journey.start(station)}
 
     before {journey.finish(other_station)}
 
