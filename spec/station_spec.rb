@@ -1,15 +1,17 @@
 require 'station'
 
 describe Station do
-subject(:station) {described_class.new("Waterloo", 1)}
 
-  describe '::new' do
+  subject (:station) {described_class.new("Waterloo",1)}
 
-    it 'should have a name' do
+  describe '#name' do
+    it 'returns the name of the station' do
       expect(station.name).to eq "Waterloo"
     end
+  end
 
-    it 'should have a zone' do
+  describe '#zone' do
+    it 'returns the zone of the station' do
       expect(station.zone).to eq 1
     end
   end

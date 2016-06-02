@@ -1,48 +1,64 @@
 require 'journey'
+require 'oystercard'
+
 
 describe Journey do
-  subject {described_class.new(entry_station)}
+  let (:station) {double :station}
+  let(:other_station) { double :other_station }
 
-  let(:entry_station) { double :station,name: "Waterloo", zone: 1 }
-  let(:exit_station) {double :station,name: "Leyton", zone: 3 }
+  context "given an entry station" do
 
-  context 'Sucessful journey' do
+    subject(:journey) {described_class.new(station)}
 
-    describe '#finish' do
-      it 'returns a hash containing entry, exit & fare' do
-        expect(subject.finish(exit_station)).to eq({entry_station: entry_station,exit_station: exit_station,fare: 1})
-      end
+    it "has an entry station" do
+      expect(journey.entry_station).to eq station
     end
 
-    describe '#fare'do
-
-      it 'returns the minimum fare' do
-        subject.finish(exit_station)
-        expect(subject.fare).to eq 1
-      end
+    it 'journey is complete' do
+      expect(journey).not_to be_complete
     end
 
-    describe '#complete?'do
-      it 'checks if journey has an entry & exit station' do
-        subject.finish(exit_station)
-        expect(subject.complete?).to eq true
-      end
+    it 'fare should return minimum fare' do
+      expect(journey.fare).to eq (Journey::PENALTY_FARE)
+    end
+
+    it 'returns itself when finish' do
+      expect(journey.finish(other_station)).to eq journey
     end
   end
 
-  context 'Unsuccessful Journey' do
+  context "given an exit station" do
 
-    describe '#complete?' do
-      it 'returns false as journey incomplete' do
-      expect(subject.complete?).to eq false
-      end
+    subject(:journey) {described_class.new}
+
+    before{journey.finish(other_station)}
+
+    it 'has an exit station' do
+        expect(journey.exit_station).to eq other_station
     end
 
-    describe '#fare' do
-      it 'returns penalty fare' do
-        expect(subject.fare).to eq 6
-      end
+    it 'journey is complete' do
+      expect(journey).not_to be_complete
+    end
+
+    it 'fare should return minimum fare' do
+      expect(journey.fare).to eq (Journey::PENALTY_FARE)
     end
   end
 
+  context "given both an entry and exit station" do
+
+    subject(:journey) {described_class.new(station)}
+
+    before {journey.finish(other_station)}
+
+    it 'journey is complete' do
+      expect(journey).to be_complete
+    end
+
+    it 'fare should return minimum fare' do
+      expect(journey.fare).to eq (Oystercard::MIN_FARE)
+    end
+
+  end
 end

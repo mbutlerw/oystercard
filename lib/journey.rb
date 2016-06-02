@@ -1,26 +1,26 @@
+require_relative 'oystercard'
+
 class Journey
 
+  PENALTY_FARE = 6
+
+  attr_reader :entry_station, :exit_station
+
   def initialize(entry_station = nil)
-    @status = {}
-
-    @status[:entry_station] = entry_station unless entry_station == nil
+    @entry_station = entry_station
+    @exit_station = nil
   end
 
-  def finish(exit_station = nil)
-    status[:exit_station] = exit_station unless exit_station == nil
-    fare
-    status
-  end
-
-  def fare
-    complete? ? status[:fare] = 1 : status[:fare] = 6
+  def finish(station = nil)
+    @exit_station = station
+    self
   end
 
   def complete?
-    [:entry_station,:exit_station].all? {|x| status.key?(x)}
+    entry_station && exit_station
   end
 
-private
-attr_reader :status
-
+  def fare
+    complete? ? Oystercard::MIN_FARE : PENALTY_FARE
+  end
 end

@@ -1,58 +1,90 @@
 require 'oystercard'
+
 describe Oystercard do
 
-  let(:entry_station) { double :station }
-  let(:exit_station) {double :station}
-  let(:journey){ {entry_station: entry_station, exit_station: exit_station}}
+	subject(:oystercard) { described_class.new }
 
-  describe '#balance' do
-    it 'has a balance' do
-      expect(subject.balance).to eq 0
-    end
-  end
+	let(:station) { double :station }
+	let(:exit_station) { double :exit_station }
+	let(:journey) {double :journey}
 
-  describe '#top_up' do
-    it{is_expected.to respond_to(:top_up).with(1).argument}
+	it 'has an empty list of arrays by default' do
+		expect(oystercard.journeys).to be_empty
+	end
 
-    it "increases balanced by expected value" do
-      subject.top_up(5)
-      expect(subject.balance).to eq 5
-      subject.top_up(5)
-      expect(subject.balance).to eq 10
-    end
+	describe '#balance' do
 
-    it 'can top up the balance' do
-      expect{subject.top_up 1}.to change{subject.balance}.by 1
-    end
+		it 'should eq zero by default' do
+			expect(oystercard.balance).to eq 0
+		end
 
-    it 'raises an error if top_up exceeds balance limit' do
-      expect { subject.top_up(100) }.to raise_error "top up exceeds balance limit, cannot top up"
-      subject.top_up(50)
-      expect { subject.top_up(50) }.to raise_error "top up exceeds balance limit, cannot top up"
-    end
-  end
+	end
 
-  describe '#touch_in' do
-    it 'raises error if balance is less than minimum fair' do
-      expect{subject.touch_in(entry_station)}.to raise_error "Insufficient balance"
-    end
-  end
+	describe '#topup' do
 
-context 'Max balance' do
-  before(:each){subject.top_up(Oystercard::MAXIMUM_BALANCE)}
+		it 'should respond to #topup with 1 argument' do
+			expect(oystercard).to respond_to(:topup).with(1).argument
+		end
 
-  describe '#touch_out' do
-    it 'reduces balance by MINIMUM_FARE' do
-      subject.touch_in(entry_station)
-      expect{subject.touch_out(exit_station)}.to change{subject.balance}.by -Oystercard::MINIMUM_FARE
-    end
-  end
+		it 'topup(value) should increase #balance by value' do
+			oystercard.topup(20)
+			expect(oystercard.balance).to eq(20)
+		end
 
-  describe '#journeys' do
-    it 'has an empty list of journeys by default' do
-      expect(subject.journeys).to be_empty
-    end
-  end
-end
+		it 'topup should raise error if balance would be over limit' do
+			max_balance = Oystercard::MAX_BALANCE
+			expect{oystercard.topup(100)}.to raise_error "Balance exceeded limit of #{max_balance}"
+		end
+
+	end
+
+
+	describe '#touch_in' do
+
+		it { is_expected.to respond_to(:touch_in).with(1).argument }
+
+
+		it 'allows user to touch in' do
+			oystercard.topup(10)
+			oystercard.touch_in(station)
+			expect(oystercard.in_journey?).to eq(true)
+		end
+
+		it 'fails if balance is below MIN_FARE' do
+			expect{oystercard.touch_in(station)}.to raise_error "insufficient balance"
+		end
+
+		it 'charges penalty fare when incomplete journey (no finish)' do
+			oystercard.topup(10)
+			oystercard.touch_in(station)
+			expect{ oystercard.touch_in(station) }.to change{ oystercard.balance }.by (-Journey::PENALTY_FARE)
+		end
+	end
+
+
+	describe '#touch_out' do
+
+		it { is_expected.to respond_to(:touch_out).with(1).argument }
+
+
+		it 'allows user to touch out' do
+			oystercard.topup(10)
+			oystercard.touch_in(station)
+			oystercard.touch_out(exit_station)
+			expect(oystercard.in_journey?).to eq(false)
+		end
+
+		it 'charges min fair for complete journey' do
+			oystercard.topup(10)
+			oystercard.touch_in(station)
+			expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by (-Oystercard::MIN_FARE)
+		end
+
+		it 'charges PENALTY_FARE for incomplete journey (no entry)' do
+			oystercard.topup(10)
+			expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by (-Journey::PENALTY_FARE)
+		end
+
+	end
 
 end

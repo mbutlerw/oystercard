@@ -1,11 +1,12 @@
-require 'oystercard'
-require 'station'
+require "oystercard"
 
-describe 'feature test' do
-  it 'works' do
-    oyster = Oystercard.new
-    oyster.top_up(50)
-    waterloo = Station.new("Waterloo",1)
-    oyster.touch_in(waterloo)
-  end
+describe "Feature test" do
+	it "feature tests" do
+		oystercard = Oystercard.new
+		oystercard.balance
+		oystercard.topup(20)
+		oystercard.touch_in(:station)
+		oystercard.touch_out(:station)
+
+	end
 end
