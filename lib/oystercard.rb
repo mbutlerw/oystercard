@@ -25,10 +25,7 @@ class Oystercard
 
   def touch_in(station)
     fail 'insufficient balance' if balance < MIN_FARE
-		if @journey
-			deduct(@journey.fare)
-			@journeys << journey.finish
-		end
+		no_touch_out_check
     create_journey
 		@journey.start(station)
   end
@@ -48,6 +45,13 @@ class Oystercard
 
 		def create_journey(journey = Journey.new)
 			@journey = journey
+		end
+
+		def no_touch_out_check
+			if @journey
+				deduct(@journey.fare)
+				@journeys << journey.finish
+			end
 		end
 
 end
