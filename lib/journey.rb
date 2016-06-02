@@ -26,7 +26,7 @@ class Journey
   end
 
   def calculate_fare
-    @fare = complete? ? Oystercard::MIN_FARE : PENALTY_FARE
+    @fare = complete? ? ((entry_station.zone - exit_station.zone).abs + 1) : PENALTY_FARE
   end
 
 end

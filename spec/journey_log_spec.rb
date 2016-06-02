@@ -3,9 +3,9 @@ require 'journey_log'
 describe JourneyLog do
 
   subject(:journey_log) { described_class.new }
-  let(:station) { double :station }
+  let(:station) { double :station, zone: 1 }
   let(:journey) { double :journey, start: station, finish: self }
-  let(:other_station) { double :other_station }
+  let(:other_station) { double :other_station, zone: 1 }
 
   describe "#start" do 
     it "starts a new journey" do 

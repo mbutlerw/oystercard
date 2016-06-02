@@ -3,8 +3,8 @@ require 'oystercard'
 
 
 describe Journey do
-  let (:station) {double :station}
-  let(:other_station) { double :other_station }
+  let (:station) {double :station, zone: 1}
+  let(:other_station) { double :other_station, zone: 1 }
 
   context "given an entry station" do
 

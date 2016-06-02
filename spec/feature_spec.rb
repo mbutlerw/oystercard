@@ -31,4 +31,22 @@ describe "Feature test" do
 		expect{oyster.touch_in(aldgate)}.to change{oyster.balance}.by (-Journey::PENALTY_FARE)
 	end
 
+	it "charges correct fare for different zones" do
+		oyster = Oystercard.new
+		waterloo = Station.new("Waterloo", 1)
+		stratford = Station.new("Stratford", 4)
+		oyster.top_up(50)
+		oyster.touch_in(waterloo)
+		expect{oyster.touch_out(stratford)}.to change{oyster.balance}.by (-4)
+	end
+
+	it "charges correct fare for different zones" do
+		oyster = Oystercard.new
+		waterloo = Station.new("Waterloo", 1)
+		cockfosters = Station.new("cockfosters", 5)
+		oyster.top_up(50)
+		oyster.touch_in(cockfosters)
+		expect{oyster.touch_out(waterloo)}.to change{oyster.balance}.by (-5)
+	end
+
 end
