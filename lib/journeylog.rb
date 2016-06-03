@@ -7,4 +7,7 @@ attr_reader :logbook
 
   end
 
-end
+  def start(station)
+    @logbook << Journey.new(station)
+  end
+  end
