@@ -75,15 +75,3 @@ class Oystercard
     @balance -= amount
   end
 end
-
-oyster = Oystercard.new
-oyster.top_up(10)
-oyster.touch_in("Bank")
-oyster.touch_out("Aldgate")
-oyster.touch_out("Bank")
-p oyster.journeys
-p oyster.balance
-
-
-
-

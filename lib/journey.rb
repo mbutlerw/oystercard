@@ -4,13 +4,15 @@ class Journey
 
 attr_reader :entry_station, :exit_station
 
-  def initialize(station_name)
-    @entry_station = Station.new(station_name)
+  def initialize(station)
+    @entry_station = station
   end
 
-  def set_exit(station_name)
-    @exit_station = Station.new(station_name)
+
+  def set_exit(station)
+    @exit_station = station
   end
+
 
   def initiate_journey
     @single_journey = []

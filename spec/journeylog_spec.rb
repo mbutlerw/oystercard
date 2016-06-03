@@ -4,6 +4,7 @@ describe JourneyLog do
 
 subject(:journeylog) {described_class.new}
 let(:station) {double :station}
+let(:other_station) {double :station}
 
 
   describe "upon initialization" do
@@ -16,6 +17,14 @@ let(:station) {double :station}
     it "should create a new journey" do
       journeylog.start(station)
       expect(journeylog.logbook.last).to_not eq nil
+    end
+  end
+
+  describe '#end' do
+    it "should end the current journey" do
+      journeylog.start(station)
+      journeylog.end(other_station)
+      expect(journeylog.logbook.last.exit_station).to eq other_station
     end
   end
 end
